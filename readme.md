@@ -2,7 +2,7 @@
 
 Some defensive portfolios are constructed from a basket of SPY, TLT, GLD, FXF, and FXY. Modern Portfolio Theory is used to determine the weights of each component, and a 'lazy' and an 'ideal' portfolio are found from those weights.
 
-The 'lazy' portfolio is subject to the constraint that the return of the portfolio must not be less than $\delta$ from the SPY return, where $\delta$ is kind of like a 'tolerance'. The value of $\delta$ is swept from $0%$ to $5%$ in increments of $0.25%$, and a new **minimum variance** portfolio is constructed for each $\delta$.
+The 'lazy' portfolio is subject to the constraint that the return of the portfolio must not be less than $\delta$ from the SPY return, where $\delta$ is kind of like a 'tolerance'. The value of $\delta$ is swept from 0% to 5% in increments of 0.25%, and a new **minimum variance** portfolio is constructed for each $\delta$.
 
 Meanwhile, the 'ideal' portfolio is simply constructed as the max-Sharpe portfolio possible. 
 
@@ -23,6 +23,7 @@ Transaction costs are ignored for simplicity. All portfolios are long-only, and 
 Let $P_t$ be the daily closing price. Then the daily return is $r_t = \frac{P_t}{P_{t-1}} - 1$. Simply adding up these returns over $T$ days then dividing by $T$ gives the arithmetic mean of the daily returns; multiplying by 252 gives an estimate for the average annual return. 
 
 The average annual return is calculated for each of the five assets and put into a vector $\mathbf{R}$.
+
 $$
 \mathbf{R} = \frac{252}{T} \sigma_{t=1}^{T}{r_t}
 $$
