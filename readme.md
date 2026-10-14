@@ -34,4 +34,4 @@ To do this calculation, the daily returns for each asset can be put into an $T \
 
 Each column of $R$ is then demeaned to another matrix $X$, meaning that each entry has the column's mean subtracted from it. In other words, $X_{i,j} = R_{i,j} - \bar{r_j}$. 
 
-Then $\frac{1}{T-1} X^{\text{T} X = \Sigma$, the covariance matrix ($n \times n$). Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance).
+Then $\frac{1}{T-1} X^{\text{T}} X = \Sigma$, the covariance matrix ($n \times n$). Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance).
