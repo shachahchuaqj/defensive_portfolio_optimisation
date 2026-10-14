@@ -25,14 +25,14 @@ Let $P_t$ be the daily closing price. Then the daily return is $r_t = \frac{P_t}
 The average annual return is calculated for each of the five assets and put into a vector $\boldsymbol{\mu}$. It should be noted that an assumption here is that the daily returns are _indepedent and uncorrelated_ of each other.
 
 $$
-\bar{r_i} = \frac{252}{T} \sum_{t=1}^{T}{r_{i,t}}
+\overline{r_i} = \frac{252}{T} \sum_{t=1}^{T}{r_{i,t}}
 $$
 
-Meanwhile, the covariance between the i-th and the j-th asset is calculated as $\sigma_{ij} = \frac{1}{T - 1} \sum_{t=1}^{T}{(r_{i,t} - \bar{r_i}) (r_{j,t} - \bar{r_j})}$. As this is a sample covariance, Bessel's correction is used ($T - 1$ instead of $T$), but over a 10-year period, $T$ is so large that even without Bessel's correction, the result should not change that much.
+Meanwhile, the covariance between the i-th and the j-th asset is calculated as $\sigma_{ij} = \frac{1}{T - 1} \sum_{t=1}^{T}{(r_{i,t} - \overline{r_i}) (r_{j,t} - \overline{r_j})}$. As this is a sample covariance, Bessel's correction is used ($T - 1$ instead of $T$), but over a 10-year period, $T$ is so large that even without Bessel's correction, the result should not change that much.
 
 To do this calculation, the daily returns for each asset can be put into an $T \times n$ matrix $R$, where the $(i,j)$-th entry is the return of the $j$-th asset on day $t = i$.
 
-Each column of $R$ is then demeaned to another matrix $X$, meaning that each entry has the column's mean subtracted from it. In other words, $X_{ij} = R_{ij} - \bar{r_j}$. 
+Each column of $R$ is then demeaned to another matrix $X$, meaning that each entry has the column's mean subtracted from it. In other words, $X_{ij} = R_{ij} - \overline{r_j}$. 
 
 Then $\frac{1}{T-1} X^{\text{T}} X = \Sigma$ which is the ($n \times n$) covariance matrix. Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance).
 
@@ -50,4 +50,4 @@ $$
 \sigma_p = \boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}
 $$
 
-For the 'lazy' portfolio, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \bar{r_{\text{SPY}}} - \delta$.
+For the 'lazy' portfolio, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \overline{r_{\text{SPY}}} - \delta$.
