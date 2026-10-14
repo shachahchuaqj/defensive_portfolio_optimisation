@@ -35,3 +35,19 @@ To do this calculation, the daily returns for each asset can be put into an $T \
 Each column of $R$ is then demeaned to another matrix $X$, meaning that each entry has the column's mean subtracted from it. In other words, $X_{ij} = R_{ij} - \bar{r_j}$. 
 
 Then $\frac{1}{T-1} X^{\text{T}} X = \Sigma$ which is the ($n \times n$) covariance matrix. Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance).
+
+We can put the weights of each asset $w_i$ into a vector $\boldsymbol{w}$, with the constraint for this 5-asset portfolio that $\sum_{i=1}^{5}{w_i} = 1$. Since the portfolios are all long-only, we also have the constraint that $w_i \geq 0$ for all assets.
+
+The portfolio variance is calculated from the covariances $\sigma_{ij}$ and the weights as such:
+
+$$
+\sigma_p = \sum_{i} \sum_{j} w_i w_j \sigma_{ij}
+$$
+
+This is just the sum of all entries of $\Sigma$ multiplied by both weights of the assets in question. In matrix form this can be done as such:
+
+$$
+\sigma_p = \boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}
+$$
+
+For the 'lazy' portfolio, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \bar{r_{\text{SPY}}} - \delta$.
