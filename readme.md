@@ -30,13 +30,13 @@ $$
 \overline{r_i} = \frac{252}{T} \sum_{t=1}^{T}{r_{i,t}}
 $$
 
-If the weights of each asset is put into a vector $\bolsymbol{w}$, then the portfolio return $r_p$ is just the dot product of $\bolsymbol{w}$ with $\boldsymbol{\mu}$. 
+If the weights of each asset is put into a vector $\boldsymbol{w}$, then the portfolio return $r_p$ is just the dot product of $\boldsymbol{w}$ with $\boldsymbol{\mu}$. 
 
 $$
-r_p = \bolsymbol{w}^{\text{T}} \boldsymbol{\mu}
+r_p = \boldsymbol{w}^{\text{T}} \boldsymbol{\mu}
 $$
 
-Of course, the weights must sum to 1 so $\sum_{i=1}^{5}{w_i} = 1$ which in vector form is $\bolsymbol{1}^{\text{T}} \boldsymbol{w} = 1$. Furthermore, since the portfolios are all long-only, then we also have the constraint that $w_i \geq 0$ for all assets.
+Of course, the weights must sum to 1 so $\sum_{i=1}^{5}{w_i} = 1$ which in vector form is $\boldsymbol{1}^{\text{T}} \boldsymbol{w} = 1$. Furthermore, since the portfolios are all long-only, then we also have the constraint that $w_i \geq 0$ for all assets.
 
 Meanwhile, the covariance between the i-th and the j-th asset is calculated as $\sigma_{ij} = \frac{1}{T - 1} \sum_{t=1}^{T}{(r_{i,t} - \overline{r_i}) (r_{j,t} - \overline{r_j})}$. As this is a sample covariance, Bessel's correction is used ($T - 1$ instead of $T$), but over a 10-year period, $T$ is so large that even without Bessel's correction, the result should not change that much.
 
@@ -67,5 +67,5 @@ For the 'lazy' portfolio with given tolerance $\delta$, the weights are found as
 Meanwhile, the 'ideal' portfolio is found by maximising the Sharpe ratio:
 
 $$
-S(\bolsymbol(w)) = \frac{r_p - r_f}{\sigma_p}
+S(\boldsymbol(w)) = \frac{r_p - r_f}{\sigma_p}
 $$
