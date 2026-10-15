@@ -58,11 +58,13 @@ $$
 \sigma_p = \boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}
 $$
 
-## Determination of the Portfolios
+## Determination of the 'Lazy' Portfolios
 
 For the 'lazy' portfolio with given tolerance $\delta$, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \overline{r_{\text{SPY}}} - \delta$.
 
 **(the actual numerical solving of the lazy portfolio)**
+
+## Determination of the 'Ideal' Portfolios
 
 Meanwhile, the 'ideal' portfolio is found by maximising the Sharpe ratio:
 
