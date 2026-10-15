@@ -20,6 +20,8 @@ Transaction costs are ignored for simplicity. All portfolios are long-only, and 
 
 10-year historical data from Jan 2010 to Jan 2020 is used for the calculation of the first weights for Jan 2020. Subsequent readjustments to the weights every quarter are based on a rolling 10-year window.
 
+## Portfolio Mathematics
+
 Let $P_t$ be the daily closing price. Then the daily return is $r_t = \frac{P_t}{P_{t-1}} - 1$. Simply adding up these returns over $T$ days then dividing by $T$ gives the arithmetic mean of the daily returns; multiplying by 252 gives an estimate for the average annual return. 
 
 The average annual return is calculated for each of the five assets and put into a vector $\boldsymbol{\mu}$. It should be noted that an assumption here is that the daily returns are _indepedent and uncorrelated_ of each other.
@@ -28,6 +30,14 @@ $$
 \overline{r_i} = \frac{252}{T} \sum_{t=1}^{T}{r_{i,t}}
 $$
 
+If the weights of each asset is put into a vector $\bolsymbol{w}$, then the portfolio return $r_p$ is just the dot product of $\bolsymbol{w}$ with $\boldsymbol{\mu}$. 
+
+$$
+r_p = \bolsymbol{w}^{\text{T}} \boldsymbol{\mu}
+$$
+
+Of course, the weights must sum to 1 so $\sum_{i=1}^{5}{w_i} = 1$ which in vector form is $\bolsymbol{1}^{\text{T}} \boldsymbol{w} = 1$. Furthermore, since the portfolios are all long-only, then we also have the constraint that $w_i \geq 0$ for all assets.
+
 Meanwhile, the covariance between the i-th and the j-th asset is calculated as $\sigma_{ij} = \frac{1}{T - 1} \sum_{t=1}^{T}{(r_{i,t} - \overline{r_i}) (r_{j,t} - \overline{r_j})}$. As this is a sample covariance, Bessel's correction is used ($T - 1$ instead of $T$), but over a 10-year period, $T$ is so large that even without Bessel's correction, the result should not change that much.
 
 To do this calculation, the daily returns for each asset can be put into an $T \times n$ matrix $R$, where the $(i,j)$-th entry is the return of the $j$-th asset on day $t = i$.
@@ -35,8 +45,6 @@ To do this calculation, the daily returns for each asset can be put into an $T \
 Each column of $R$ is then demeaned to another matrix $X$, meaning that each entry has the column's mean subtracted from it. In other words, $X_{ij} = R_{ij} - \overline{r_j}$. 
 
 Then $\frac{1}{T-1} X^{\text{T}} X = \Sigma$ which is the ($n \times n$) covariance matrix. Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance).
-
-We can put the weights of each asset $w_i$ into a vector $\boldsymbol{w}$, with the constraint for this 5-asset portfolio that $\sum_{i=1}^{5}{w_i} = 1$. Since the portfolios are all long-only, we also have the constraint that $w_i \geq 0$ for all assets.
 
 The portfolio variance is calculated from the covariances $\sigma_{ij}$ and the weights as such:
 
@@ -50,4 +58,14 @@ $$
 \sigma_p = \boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}
 $$
 
-For the 'lazy' portfolio, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \overline{r_{\text{SPY}}} - \delta$.
+## Determination of the Portfolios
+
+For the 'lazy' portfolio with given tolerance $\delta$, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \overline{r_{\text{SPY}}} - \delta$.
+
+(the actual numerical solving of the lazy portfolio)
+
+Meanwhile, the 'ideal' portfolio is found by maximising the Sharpe ratio:
+
+$$
+S(\bolsymbol(w)) = \frac{r_p - r_f}{\sigma_p}
+$$
