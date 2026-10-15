@@ -62,7 +62,7 @@ $$
 
 For the 'lazy' portfolio with given tolerance $\delta$, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \overline{r_{\text{SPY}}} - \delta$.
 
-**(the actual numerical solving of the lazy portfolio)**
+Since the solution to $\boldsymbol{w}$ could truly be the global minimum variance (if $r_p > \overline{r_{\text{SPY}}} - \delta$), or have return equal to the allowed floor ($r_p = \overline{r_{\text{SPY}}} - \delta$), SciPy's `minimize` function is used with the SLSQP method. $w_{\text{SPY}} = 1$ and all other weights 0 is used as a starting guess.
 
 ## Determination of the 'Ideal' Portfolios
 
@@ -74,4 +74,4 @@ $$
 
 The 3-month US Treasury yield is used as the risk-free rate $r_f$. Technically, the denominator should be the standard deviation of the excess return of the portfolio over the risk-free rate, but $r_f$ is assumed to be a constant and have 0 variance.
 
-**(the actual numerical solving of the ideal portfolio)**
+Again, SciPy's `minimize` function is used with the SLSQP method to solve for the weights. Once again $w_{\text{SPY}} = 1$ and all other weights 0 is used as a starting guess.
