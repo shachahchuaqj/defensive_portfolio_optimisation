@@ -62,10 +62,10 @@ $$
 
 For the 'lazy' portfolio with given tolerance $\delta$, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \overline{r_{\text{SPY}}} - \delta$.
 
-(the actual numerical solving of the lazy portfolio)
+**(the actual numerical solving of the lazy portfolio)**
 
 Meanwhile, the 'ideal' portfolio is found by maximising the Sharpe ratio:
 
 $$
-S(\boldsymbol(w)) = \frac{r_p - r_f}{\sigma_p}
+S(\boldsymbol{w}) = \frac{r_p - r_f}{\sigma_p}
 $$
