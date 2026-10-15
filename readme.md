@@ -6,7 +6,7 @@ The 'lazy' portfolio is subject to the constraint that the return of the portfol
 
 Meanwhile, the 'ideal' portfolio is simply constructed as the max-Sharpe portfolio possible. 
 
-For the Sharpe ratio calculations, the risk-free rate is approximated as the return of BIL as a proxy.
+For the Sharpe ratio calculations, the risk-free rate is approximated as the 3-month US Treasury yield.
 
 Each portfolio is constructed using rolling 10-year historical data, and their performance is measured started from Jan 2020. The weights are readjusted quarterly after Jan 2020.
 
@@ -69,3 +69,7 @@ Meanwhile, the 'ideal' portfolio is found by maximising the Sharpe ratio:
 $$
 S(\boldsymbol{w}) = \frac{r_p - r_f}{\sigma_p}
 $$
+
+The 3-month US Treasury yield is used as the risk-free rate $r_f$. Technically, the denominator should be the standard deviation of the excess return of the portfolio over the risk-free rate, but $r_f$ is assumed to be a constant and have 0 variance.
+
+**(the actual numerical solving of the ideal portfolio)**
