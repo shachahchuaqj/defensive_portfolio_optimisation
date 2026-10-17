@@ -24,7 +24,7 @@ Transaction costs are ignored for simplicity. All portfolios are long-only, and 
 
 Let $P_t$ be the daily closing price. Then the daily return is $r_t = \frac{P_t}{P_{t-1}} - 1$. Simply adding up these returns over $T$ days then dividing by $T$ gives the arithmetic mean of the daily returns; multiplying by 252 gives an estimate for the average annual return. 
 
-The average annual return is calculated for each of the five assets and put into a vector $\boldsymbol{\mu}$. It should be noted that an assumption here is that the daily returns are _indepedent and uncorrelated_ of each other.
+The average annual return is calculated for each of the five assets and put into a vector $\boldsymbol{\mu}$. 
 
 $$
 \mu_i = \frac{252}{T} \sum_{t=1}^{T}{r_{i,t}}
@@ -44,9 +44,9 @@ To do this calculation, the daily returns for each asset can be put into an $T \
 
 Each column of $R$ is then demeaned to another matrix $X$, meaning that each entry has the column's mean subtracted from it. In other words, $X_{ij} = R_{ij} - \overline{r_j}$. 
 
-Then $\frac{252}{T-1} X^{\text{T}} X = \Sigma$ which is the ($5 \times 5$) covariance matrix. Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance). The factor of 252 is from annualising the covariance matrix (which is for daily data), and because it is assumed that the daily returns are all mutually independent.
+Then $\frac{252}{T-1} X^{\text{T}} X = \Sigma$ which is the ($5 \times 5$) covariance matrix. Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance). The factor of 252 is from annualising the covariance matrix (which is for daily data), and because it is assumed that the daily returns are all _mutually independent_.
 
-The portfolio variance is calculated from the covariances $\sigma_{ij}$ and the weights as such:
+The portfolio variance is calculated from the covariances $\sigma_{ij}$ in the covariance matrix $\Sigma$ and the weights as such:
 
 $$
 \sigma_p^2 = \sum_{i} \sum_{j} w_i w_j \sigma_{ij}
@@ -60,9 +60,9 @@ $$
 
 ## Determination of the 'Lazy' Portfolios
 
-For the 'lazy' portfolio with given tolerance $\delta$, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \overline{r_{\text{SPY}}} - \delta$.
+For the 'lazy' portfolio with given tolerance $\delta$, the weights are found as the solution to minimising the quantity $\boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w}$, with the tolerance restriction $\boldsymbol{w}^{\text{T}} \boldsymbol{\mu} \geq \mu_{\text{SPY}} - \delta$.
 
-Since the solution to $\boldsymbol{w}$ could truly be the global minimum variance (if $\mu_p > \mu_{\text{SPY}} - \delta$), or have return equal to the allowed floor ($\mu_p > \mu_{\text{SPY}} - \delta$), SciPy's `minimize` function is used with the SLSQP method. $w_{\text{SPY}} = 1$ and all other weights 0 is used as a starting guess.
+Since the solution to $\boldsymbol{w}$ could truly be the global minimum variance (if $\mu_p > \mu_{\text{SPY}} - \delta$), or have return equal to the allowed floor ($\mu_p = \mu_{\text{SPY}} - \delta$), SciPy's `minimize` function is used with the SLSQP method. $w_{\text{SPY}} = 1$ and all other weights 0 is used as a starting guess.
 
 ## Determination of the 'Ideal' Portfolios
 
