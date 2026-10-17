@@ -46,10 +46,10 @@ Each column of $R$ is then demeaned to another matrix $X$, meaning that each ent
 
 Then $\frac{252}{T-1} X^{\text{T}} X = \Sigma$ which is the ($5 \times 5$) covariance matrix. Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance). The factor of 252 is from annualising the covariance matrix (which is for daily data), and because it is assumed that the daily returns are all _mutually independent_.
 
-The portfolio variance is calculated from the covariances $\sigma_{ij}$ in the covariance matrix $\Sigma$ and the weights as such:
+The portfolio variance is calculated from the entries in the covariance matrix $\Sigma$ and the weights as such:
 
 $$
-\sigma_p^2 = \sum_{i} \sum_{j} w_i w_j \sigma_{ij}
+\sigma_p^2 = \sum_{i} \sum_{j} w_i w_j \Sigma_{ij}
 $$
 
 This is just the sum of all entries of $\Sigma$ multiplied by both weights of the assets in question. In matrix form this can be done as such:
