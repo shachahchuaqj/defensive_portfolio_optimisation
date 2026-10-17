@@ -19,13 +19,10 @@ def download_rf(start=start) -> pd.DataFrame:
     rf = (rf_percent / 100.0).rename("rf_annual")       # decimalise the risk-free rate.
     rf = rf.loc[start:].ffill()
     return rf.to_frame()
- 
- 
-def rf_at(rf, date):
-    """Annualised risk-free rate on the last available day on or before `date`."""
-    return float(rf["rf_annual"].asof(pd.Timestamp(date)))
- 
+  
+
 rf = download_rf() # DataFrame containing data on the risk-free rate.
+
  
 def main():
     rf = download_rf()
