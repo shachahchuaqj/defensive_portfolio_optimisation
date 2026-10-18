@@ -85,6 +85,3 @@ Again, SciPy's `minimize` function is used with the SLSQP method to solve for th
 $$
 \nabla S = \frac{\boldsymbol{\mu}}{\sigma_p} - \frac{ \left( \boldsymbol{w}^\text{T} \boldsymbol{\mu} - r_f \right) \left( \Sigma \boldsymbol{w} \right) }{ \sigma_p^3 }
 $$
-
-# Results
-

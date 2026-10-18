@@ -12,4 +12,3 @@ for delta in lazyports:
 
 spyresult = Performance(SPYport[0], rf)
 idealresult = Performance(idealport[0], rf)
-
