@@ -97,7 +97,7 @@ class IdealPortfolio:
             bounds=bounds,
             constraints=constraints,
             method="SLSQP",
-            options={"ftol": 1e-12, "maxiter": 500},
+            options={"ftol": 1e-9, "maxiter": 500},
         )
         if not res.success:
             raise RuntimeError(f"SLSQP failed (rf={rf:.4f}): {res.message}")
@@ -163,3 +163,4 @@ from treasuryyields import rf
 
 ideal = IdealPortfolio(prices, rf)
 history = ideal.quarterly_weights()
+idealport: tuple[IdealPortfolio, pd.DataFrame] = (ideal, history)

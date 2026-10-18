@@ -72,7 +72,7 @@ class LazyPortfolio:
             bounds=bounds,
             constraints=constraints,
             method="SLSQP",
-            options={"ftol": 1e-12, "maxiter": 500},
+            options={"ftol": 1e-9, "maxiter": 500},
         )
         if not res.success:
             raise RuntimeError(f"SLSQP failed (delta={self.delta}): {res.message}")
@@ -130,10 +130,10 @@ class LazyPortfolio:
 
 from tickerprices import prices
 
-delta = 0.00
-deltaweights = dict()
-while delta <= 0.05:
+deltas = np.round(np.arange(0, 0.0501, 0.0025), 4)
+lazyports: dict[float, tuple[LazyPortfolio, pd.DataFrame]] = dict()
+for delta in deltas:
     lazy = LazyPortfolio(prices, delta=delta)
     history = lazy.quarterly_weights()
-    deltaweights[delta] = history
+    lazyports[delta] = (lazy, history)
     delta += 0.0025
