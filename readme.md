@@ -64,6 +64,12 @@ For the 'lazy' portfolio with given tolerance $\delta$, the weights are found as
 
 Since the solution to $\boldsymbol{w}$ could truly be the global minimum variance (if $\mu_p > \mu_{\text{SPY}} - \delta$), or have return equal to the allowed floor ($\mu_p = \mu_{\text{SPY}} - \delta$), SciPy's `minimize` function is used with the SLSQP method. $w_{\text{SPY}} = 1$ and all other weights 0 is used as a starting guess.
 
+To guide the numerical solving, the gradient of the variance is used in SciPy `minimize`. 
+
+$$
+\nabla \left( \boldsymbol{w}^{\text{T}} \Sigma \boldsymbol{w} \right) = 2 \Sigma \boldsymbol{w}
+$$
+
 ## Determination of the 'Ideal' Portfolios
 
 Meanwhile, the 'ideal' portfolio is found by maximising the Sharpe ratio:
@@ -74,4 +80,8 @@ $$
 
 The 3-month US Treasury yield is used as the risk-free rate $r_f$. Technically, the denominator should be the standard deviation of the excess return of the portfolio over the risk-free rate, but $r_f$ is assumed to be a constant and have 0 variance.
 
-Again, SciPy's `minimize` function is used with the SLSQP method to solve for the weights. Once again $w_{\text{SPY}} = 1$ and all other weights 0 is used as a starting guess.
+Again, SciPy's `minimize` function is used with the SLSQP method to solve for the weights. Once again $w_{\text{SPY}} = 1$ and all other weights 0 is used as a starting guess. Like for the 'lazy' portfolios, to guide the numerical solving, the gradient of the Sharpe ratio is used in SciPy `minimize`.
+
+$$
+\nabla S = \frac{\boldsymbol{\mu}}{\sigma_p} - \frac{ \left( \boldsymbol{w}^\text{T} \boldsymbol{\mu} - r_f \right) \left( \Sigma \boldsymbol{w} \right) }{ \sigma_p^3 }
+$$
