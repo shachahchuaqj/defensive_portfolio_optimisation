@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from lazyportfolio import lazyports
 from idealportfolio import idealport
 from performance import Performance, SPYport
@@ -12,6 +13,3 @@ for delta in lazyports:
 spyresult = Performance(SPYport[0], rf)
 idealresult = Performance(idealport[0], rf)
 
-print(spyresult.summary())
-print(idealresult.summary())
-print(lazyresults[0.05].summary())

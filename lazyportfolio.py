@@ -130,7 +130,7 @@ class LazyPortfolio:
 
 from tickerprices import prices
 
-deltas = np.round(np.arange(0, 0.0501, 0.0025), 4)
+deltas = np.round(np.arange(0.0024999, 0.0501, 0.0025), 4)
 lazyports: dict[float, tuple[LazyPortfolio, pd.DataFrame]] = dict()
 for delta in deltas:
     lazy = LazyPortfolio(prices, delta=delta)
