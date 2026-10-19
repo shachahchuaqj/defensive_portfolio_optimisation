@@ -1,6 +1,6 @@
 # About
 
-Some defensive portfolios are constructed from a basket of SPY, TLT, GLD, FXF, and FXY. Modern Portfolio Theory is used to determine the weights of each component, and a 'lazy' and an 'ideal' portfolio are found from those weights.
+Some defensive portfolios are constructed from a basket of SPY, TLT, GLD, FXF, and FXY (as proxies for the S&P, US Treasuries, Gold, CHF and JPY). Modern Portfolio Theory is used to determine the weights of each component, and a 'lazy' and an 'ideal' portfolio are found from those weights.
 
 The 'lazy' portfolio is subject to the constraint that the return of the portfolio must not be less than $\delta$ from the SPY return, where $\delta$ is kind of like a 'tolerance'. The value of $\delta$ is swept from 0.25% to 5% in increments of 0.25%, and a new **minimum variance** portfolio is constructed for each $\delta$.
 
