@@ -154,17 +154,49 @@ class Performance:
         '''
         peak = self.values.cummax()
         return float(((peak - self.values) / peak).max())
- 
- 
+
+
+    def annualised_volatility(self) -> float:
+        '''Annualised volatility of daily portfolio returns, using sample standard deviation.'''
+        return float(self.port_returns.std(ddof=1) * np.sqrt(self.trading_days))
+
+
+    def average_weights(self) -> pd.Series:
+        '''
+        Time-weighted average of the target weights over the test period.
+        Weights set at the close of a rebalance date apply from the next trading day, so each
+        trading day is matched to the latest rebalance date strictly before it.
+
+        '''
+        wh = self.weights_history
+        days = self.values.index[1:]
+        pos = wh.index.searchsorted(days, side="left") - 1
+        return wh.iloc[pos].mean()
+
+
+    def step_frame(self) -> pd.DataFrame:
+        '''
+        Express target weights as percentage, extend target weights to last trading day.
+        For graph plotting purposes.
+        '''
+        wh = self.weights_history * 100
+        end = self.values.index[-1]
+        if wh.index[-1] < end:
+            wh = pd.concat([wh, wh.iloc[[-1]].set_axis([end], axis=0)])
+        return wh
+
+
+    
     def summary(self) -> pd.Series:
         '''All headline numbers for this portfolio in one Series.'''
         return pd.Series({
             "Initial value ($)": self.initial_value,
             "Final value ($)": self.final_value(), 
-            "CAGR": self.cagr(),
+            "Annualised volatility (%)": self.annualised_volatility() * 100,
+            "CAGR (%)": self.cagr() * 100,
             "Sharpe ratio": self.sharpe_ratio(),
             "Beta (vs market index)": self.beta(),
-            "CVaR 95% (daily)": self.cvar(),
-            "Max drawdown": self.max_drawdown(),
-            "Avg turnover per rebalance": float(self.turnover.mean()) if len(self.turnover) else 0.0,
+            "CVaR 95% daily (%)": self.cvar() * 100,
+            "Max drawdown (%)": self.max_drawdown() * 100,
+            "Avg turnover per rebalance (%)": float(self.turnover.mean()) * 100 if len(self.turnover) else 0.0,
         })

@@ -85,3 +85,25 @@ Again, SciPy's `minimize` function is used with the SLSQP method to solve for th
 $$
 \nabla S = \frac{\boldsymbol{\mu}}{\sigma_p} - \frac{ \left( \boldsymbol{w}^\text{T} \boldsymbol{\mu} - r_f \right) \left( \Sigma \boldsymbol{w} \right) }{ \sigma_p^3 }
 $$
+
+# Results
+
+**Fig 1a:** Variation of the weights of each asset in all 'lazy' portfolios (varying blue-scale) and the 'ideal' portfolio (orange) over the test period. 
+
+Note that for a long-only maximum Sharpe portfolio, the findings show that you should be holding no CHF or JPY. The shift away from US Treasuries to Gold is also interesting.
+
+![Fig 1a](/figures/fig1a_weights_over_time.png)
+
+**Fig 1b:** The time-weighted average weight for each asset is plotted against the return tolerance ($\delta$) for all 'lazy' portfolios (blue). The weights for the max-Sharpe 'ideal' portfolio is also plotted (orange dashed line).
+
+![Fig 1b](/figures/fig1b_average_weights.png)
+
+**Fig 2:** Scatter plots of annualised portfolio return against different measures of risk. The trend for the 'lazy' minimum-variance portfolios as the tolerance $\delta$ increases is also shown (blue-scale line). The 'ideal' max-Sharpe portfolio is also plotted (orange) together with the 100% SPY portfolio (purple) for comparison.
+
+![Fig 2](/figures/fig3_metrics_vs_delta.png)
+
+**Fig 3:** The trendlines of other metrics against tolerance $\delta$ for the 'lazy' portfolios is shown (blue). The same metrics for the 'ideal' max-Sharpe portfolio (orange dashed line) and 100% SPY portfolio (purple dashed line) is shown for comparison.
+
+![Fig 3](/figures/fig3_metrics_vs_delta.png)
+
+All metrics are summarised in the file `metrics_by_portfolio.csv` under the `figures` folder.
