@@ -1,24 +1,30 @@
-# About
+# Defensive Portfolio Optimisation
 
-Some defensive portfolios are constructed from a basket of SPY, TLT, GLD, FXF, and FXY (as proxies for the S&P, US Treasuries, Gold, CHF and JPY). Modern Portfolio Theory is used to determine the weights of each component, and a 'lazy' and an 'ideal' portfolio are found from those weights.
+A Python project investigating whether diversified, long-only portfolios can reduce risk relative to an S&P 500 benchmark while preserving expected returns.
 
-The 'lazy' portfolio is subject to the constraint that the return of the portfolio must not be less than $\delta$ from the SPY return, where $\delta$ is kind of like a 'tolerance'. The value of $\delta$ is swept from 0.25% to 5% in increments of 0.25%, and a new **minimum variance** portfolio is constructed for each $\delta$.
+## About
 
-Meanwhile, the 'ideal' portfolio is simply constructed as the **max-Sharpe** portfolio possible. 
+This project uses Modern Portfolio Theory to construct defensive portfolios from five ETFs: SPY (S&P 500 equities), TLT (long-term US Treasuries), GLD (gold), FXF (Swiss franc exposure), and FXY (Japanese yen exposure). It compares minimum-variance portfolios subject to return constraints (the **'lazy' portfolios**) with a maximum-Sharpe-ratio **'ideal' portfolio**.
+
+For each 'lazy' portfolio, estimated annualised expected return must be at least the estimated return of SPY minus a tolerance $\delta$. The tolerance ranges from **0.25 to 5 percentage points**, in increments of 0.25 percentage points, with a separate **minimum-variance** portfolio constructed at each level.
+
+The 'ideal' portfolio instead maximises the **estimated Sharpe ratio** within the same long-only, fully invested asset universe. 
 
 For the Sharpe ratio calculations, the risk-free rate is approximated as the 3-month US Treasury yield.
 
-Each portfolio is constructed using rolling 10-year historical data, and their performance is measured started from Jan 2020. The weights are readjusted quarterly after Jan 2020.
+Portfolio weights are estimated using rolling 10-year historical windows. Out-of-sample performance is evaluated beginning in January 2020, with quarterly rebalancing.
 
 A simple 100% SPY portfolio is also used for comparison.
 
-The Sharpe ratio, beta, CVaR, and max drawdown post-Jan 2020 is calculated for each portfolio and reported. CVaR is defined at 95% on daily returns.
+Performance is evaluated using the Sharpe ratio, beta, 95% daily-return conditional value at risk (CVaR), and maximum drawdown, alongside realised return and volatility.
 
 Transaction costs are ignored for simplicity. All portfolios are long-only, and fully invested without leverage. 
 
-# Methodology
+## Methodology
 
-10-year historical data from Jan 2010 to Jan 2020 is used for the calculation of the first weights for Jan 2020. Subsequent readjustments to the weights every quarter are based on a rolling 10-year window.
+The initial portfolio weights for January 2020 are estimated using approximately 10 years of historical observations beginning in January 2010. Weights are subsequently recalculated every quarter using a rolling 10-year estimation window. The optimisation uses historical estimates of expected returns and covariances; realised performance is assessed over the subsequent backtest period.
+
+The intended backtesting sequence is to estimate parameters using data available at each rebalance date, solve for portfolio weights, and apply those weights to subsequent returns. The exact execution timing should be checked against the implementation to confirm that no future observations enter each optimisation.
 
 ## Portfolio Mathematics
 
@@ -44,7 +50,7 @@ To do this calculation, the daily returns for each asset can be put into an $T \
 
 Each column of $R$ is then demeaned to another matrix $X$, meaning that each entry has the column's mean subtracted from it. In other words, $X_{ij} = R_{ij} - \overline{r_j}$. 
 
-Then $\frac{252}{T-1} X^{\text{T}} X = \Sigma$ which is the ($5 \times 5$) covariance matrix. Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance). The factor of 252 is from annualising the covariance matrix (which is for daily data), and because it is assumed that the daily returns are all _mutually independent_.
+Then $\frac{252}{T-1} X^{\text{T}} X = \Sigma$ which is the ($5 \times 5$) covariance matrix. Each entry in $\Sigma$ is the dot product of one column of $X$ with another column of $X$ (or itself), multiplied by $\frac{1}{T-1}$ which gives the covariance between two assets (or the covariance of an asset with itself, which is just variance). The factor of 252 annualises the daily covariance matrix under the usual approximation that serial covariances across trading days are negligible. This does **not** assume that different assets are independent: contemporaneous cross-asset covariance is explicitly represented by the off-diagonal elements of $\Sigma$.
 
 The portfolio variance is calculated from the entries in the covariance matrix $\Sigma$ and the weights as such:
 
@@ -78,7 +84,7 @@ $$
 S(\boldsymbol{w}) = \frac{\mu_p - r_f}{\sigma_p}
 $$
 
-The 3-month US Treasury yield is used as the risk-free rate $r_f$. Technically, the denominator should be the standard deviation of the excess return of the portfolio over the risk-free rate, but $r_f$ is assumed to be a constant and have 0 variance.
+The 3-month US Treasury yield is used as a proxy for the risk-free rate $r_f$. The displayed Sharpe-ratio expression treats $r_f$ as fixed within each optimisation and expressed on the same annualised basis as $\mu_p$. If risk-free returns vary during the evaluation period, the volatility of realised excess returns may differ from $\sigma_p$.
 
 Again, SciPy's `minimize` function is used with the SLSQP method to solve for the weights. Once again $w_{\text{SPY}} = 1$ and all other weights 0 is used as a starting guess. Like for the 'lazy' portfolios, to guide the numerical solving, the gradient of the Sharpe ratio is used in SciPy `minimize`.
 
@@ -86,24 +92,70 @@ $$
 \nabla S = \frac{\boldsymbol{\mu}}{\sigma_p} - \frac{ \left( \boldsymbol{w}^\text{T} \boldsymbol{\mu} - r_f \right) \left( \Sigma \boldsymbol{w} \right) }{ \sigma_p^3 }
 $$
 
-# Results
+## Results
 
 **Fig 1a:** Variation of the weights of each asset in all 'lazy' portfolios (varying blue-scale) and the 'ideal' portfolio (orange) over the test period. 
 
-Note that for a long-only maximum Sharpe portfolio, the findings show that you should be holding no CHF or JPY. The shift away from US Treasuries to Gold is also interesting.
+In this sample, the long-only maximum-Sharpe solution assigns no weight to FXF or FXY. The allocation also shifts away from long-term US Treasuries towards gold over parts of the backtest. These are sample- and model-dependent outcomes, **not** general investment recommendations.
 
-![Fig 1a](/figures/fig1a_weights_over_time.png)
+![Fig 1a](figures/fig1a_weights_over_time.png)
 
 **Fig 1b:** The time-weighted average weight for each asset is plotted against the return tolerance ($\delta$) for all 'lazy' portfolios (blue). The weights for the max-Sharpe 'ideal' portfolio is also plotted (orange dashed line).
 
-![Fig 1b](/figures/fig1b_average_weights.png)
+![Fig 1b](figures/fig1b_average_weights.png)
 
 **Fig 2:** Scatter plots of annualised portfolio return against different measures of risk. The trend for the 'lazy' minimum-variance portfolios as the tolerance $\delta$ increases is also shown (blue-scale line). The 'ideal' max-Sharpe portfolio is also plotted (orange) together with the 100% SPY portfolio (purple) for comparison.
 
-![Fig 2](/figures/fig3_metrics_vs_delta.png)
+![Fig 2](figures/fig3_metrics_vs_delta.png)
 
 **Fig 3:** The trendlines of other metrics against tolerance $\delta$ for the 'lazy' portfolios is shown (blue). The same metrics for the 'ideal' max-Sharpe portfolio (orange dashed line) and 100% SPY portfolio (purple dashed line) is shown for comparison.
 
-![Fig 3](/figures/fig3_metrics_vs_delta.png)
+![Fig 3](figures/fig3_metrics_vs_delta.png)
 
-All metrics are summarised in the file `metrics_by_portfolio.csv` under the `figures` folder.
+All metrics are summarised in [`figures/metrics_by_portfolio.csv`](figures/metrics_by_portfolio.csv).
+
+**Figure-file check:** The original README links Figures 2 and 3 to the same file (`fig3_metrics_vs_delta.png`). Verify the intended filename for Figure 2 and correct its link if a separate figure exists.
+
+## Reproducing the Analysis
+
+Install the project dependencies from the repository root:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+The repository uses Python with NumPy, pandas, SciPy and Matplotlib for numerical analysis, optimisation and visualisation. The `requirements.txt` file must be committed before the command above will work.
+
+The analysis is organised around these scripts (verify the current filenames and execution order against the repository):
+
+| Script | Role |
+|---|---|
+| `tickerprices.py` | ETF price data preparation |
+| `treasuryyields.py` | Treasury yield data preparation |
+| `lazyportfolio.py` | Return-constrained minimum-variance optimisation |
+| `idealportfolio.py` | Maximum-Sharpe portfolio optimisation |
+| `performance.py` | Portfolio performance calculations |
+| `results.py` | Results summaries and figures |
+
+**To complete reproducibility:** Document the precise source and retrieval date of the price and yield datasets, whether ETF prices are dividend-adjusted, and the verified commands required to run the scripts in order. Those details cannot be established from this README alone.
+
+## Limitations
+
+- **Estimation uncertainty:** Historical expected returns and covariance estimates are noisy; optimal weights may be sensitive to small changes in inputs.
+- **Economic regimes:** The backtest begins in January 2020 and includes unusual market conditions. Results need not generalise to other periods.
+- **Trading frictions:** Transaction costs, spreads and market impact are excluded, potentially overstating implementable returns.
+- **Investment universe:** Results depend on the five selected ETFs and the long-only, no-leverage constraints.
+- **Risk-free-rate approximation:** The 3-month Treasury yield is a proxy and may not exactly match the realised return on a continuously rolled cash investment.
+- **Data and execution assumptions:** Dividend adjustments, data-release timing and the treatment of rebalance dates should be verified in code before making stronger claims about investable performance.
+
+## Potential Extensions
+
+- Incorporate turnover and transaction costs into the backtest.
+- Compare sample covariance estimates with shrinkage estimators.
+- Test sensitivity to estimation-window length and rebalancing frequency.
+- Compare minimum variance and maximum Sharpe against risk parity or minimum-CVaR strategies.
+- Examine performance and parameter stability across different market regimes.
+
+## Disclaimer
+
+This project is for educational and research purposes. Historical backtest results do not guarantee future performance and should not be interpreted as investment advice.
