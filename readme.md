@@ -155,7 +155,3 @@ The analysis is organised around these scripts (verify the current filenames and
 - Test sensitivity to estimation-window length and rebalancing frequency.
 - Compare minimum variance and maximum Sharpe against risk parity or minimum-CVaR strategies.
 - Examine performance and parameter stability across different market regimes.
-
-## Disclaimer
-
-This project is for educational and research purposes. Historical backtest results do not guarantee future performance and should not be interpreted as investment advice.
